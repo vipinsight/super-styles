@@ -1,5 +1,6 @@
 $(function() {
 
+	var SETTINGS_KEY = '__settings';
 	var jsCM;
 	var cssCM;
 
@@ -21,49 +22,58 @@ $(function() {
 		});
 	}
 
-	chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
-		var url = tabs[0].url;
-		var host = get_hostname(url);
+	chrome.tabs.query({'active': true, 'currentWindow': true}, async function (tabs) {
+		var tab = tabs[0];
+		var host = '';
+		try {
+			host = new URL(tab.url).hostname;
+		} catch (e) {}
 
-		var width;
-		var fontsize;
+		var stored = await chrome.storage.local.get([host, SETTINGS_KEY]);
+		var styles = stored[host] || { css: '', js: '' };
+		var settings = stored[SETTINGS_KEY] || {};
 
-		fontsize = localStorage['fontsize'];
-
-		if(localStorage['width'] != '' && localStorage['width'] < 781 && localStorage['width'] > 449) {
-			width = localStorage['width'];
-		} else {
+		var width = settings.width;
+		if (!(width < 781 && width > 449)) {
 			width = '550';
 		}
+		var fontsize = settings.fontsize || '14px';
 		$('.width').val(width);
 		$('.fontsize').val(fontsize);
 		$('body').css('width', width + 'px');
 
-		$('body').prepend('<div class="host">Super Styles - ' + host + '</div>');
+		$('body').prepend($('<div class="host">').text('Super Styles - ' + host));
 
-		$('.css').val(localStorage[host + '-css']);
-		$('.js').val(localStorage[host + '-js']);
+		$('.css').val(styles.css);
+		$('.js').val(styles.js);
 
+		var saveTimer;
 		$(document).on('keyup change', function() {
 			jsCM.save();
 			cssCM.save();
-			localStorage[host + '-css'] = $('.css').val();
-			localStorage[host + '-js'] = $('.js').val();
-			localStorage['width'] = $('.width').val();
-			localStorage['fontsize'] = $('.fontsize').val();
-			executeScripts(null, 
-				[
-					{ code: "var css = '"+ addslashes(localStorage[host + '-css'].replace(/(\r\n|\n|\r)/gm,"")) +"';", runAt: 'document_start' },
-					{ code: "var js = '"+ addslashes(localStorage[host + '-js'].replace(/(\r\n|\n|\r)/gm,"")) +"';", runAt: 'document_start' },
-					{ file: "jquery.js", runAt: 'document_start' },
-					{ file: "superstyles.js", runAt: 'document_start' }
-				]
-			);
+			clearTimeout(saveTimer);
+			saveTimer = setTimeout(save, 200);
 		});
+
+		async function save() {
+			var data = {};
+			if (host) {
+				data[host] = { css: $('.css').val(), js: $('.js').val() };
+			}
+			data[SETTINGS_KEY] = {
+				width: $('.width').val(),
+				fontsize: $('.fontsize').val(),
+				wrap: $('.wrap:checked').length > 0 ? 1 : 0
+			};
+			await chrome.storage.local.set(data);
+			if (host) {
+				chrome.runtime.sendMessage({ type: 'apply', tabId: tab.id });
+			}
+		}
 
 		var lineWrapping = false;
 
-		if(localStorage['wrap'] == 1) {
+		if(settings.wrap == 1) {
 			$('.wrap').prop('checked', true);
 			lineWrapping = true;
 		}
@@ -71,13 +81,7 @@ $(function() {
 		$('.wrap').change(function () {
 			jsCM.toTextArea();
 			cssCM.toTextArea();
-			if($('.wrap:checked').length > 0) {
-				localStorage['wrap'] = 1;
-				lineWrapping = true;
-			} else {
-				localStorage['wrap'] = 0;
-				lineWrapping = false;
-			}
+			lineWrapping = $('.wrap:checked').length > 0;
 			init_codemirror(lineWrapping);
 		});
 

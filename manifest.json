@@ -1,22 +1,26 @@
 {
 	"name": "Super Styles",
-	"version": "1.0.0",
-	"manifest_version": 2,
+	"version": "1.1.0",
+	"manifest_version": 3,
 	"author": "Vipin Yadav",
-	"homepage_url": "https://www.webtiara.com/",
+	"homepage_url": "https://vipinyadav.com/",
 	"description": "Write custom CSS/JS to any websites",
-	"browser_action": {
+	"action": {
 		"default_icon": "img/logo-32.png",
 		"default_popup": "popup.html"
 	},
 	"background": {
-		"page": "background.html"
+		"service_worker": "background.js"
 	},
 	"permissions": [
 		"tabs",
+		"storage",
+		"scripting",
+		"offscreen"
+	],
+	"host_permissions": [
 		"http://*/*",
-		"https://*/*",
-		"storage"
+		"https://*/*"
 	],
 	"icons": {
 		"16": "img/logo-16.png",

@@ -1,22 +1,22 @@
 # Privacy Policy
 
-Your data always belongs to you, and only you. We does not collect any data.
+Your data always belongs to you, and only you. Super Styles does not collect any data.
 
 ## How your data is protected and used
 
-- By default, We does not send any data to our servers or any third parties. All your data is processed and stored locally on your device.
-- If you connect your account, data is only transmitted from your browser to servers belonging to the connected account.
-- If you enable the "synchronize options" setting, your options will be sent to servers belonging to the vendor of the browser you are using.
-- When processing a page, We needs to inject temporary data into the page to save it accurately. We can download resources that are not displayed or not already cached but present in the page. When using our extendion in Chromium-based browsers, websites can fetch resources declared in the "web_accessible_resources" section of the manifest.json file. Because of this, a website may be able to detect you are using our extension or have saved a page on the website with us.
+- Super Styles does not send any data to my servers or to any third parties. It makes no network requests.
+- The CSS and JavaScript you write for a website are saved on your device only, in the browser's extension storage (`chrome.storage.local`), together with your popup settings (width, font size, word wrap).
+- The extension reads the address of the tab you are using to know which website your styles belong to, and applies your saved CSS and JavaScript to pages on that website. It does not read or store page content or browsing history.
+- Your saved JavaScript runs in the pages of the website you saved it for. You write that code yourself; the extension does not download or run code from anywhere else.
 
 ## Customer support
 
-When you request for customer support, we may ask for your email address to get back to you.
+When you request customer support, I may ask for your email address to get back to you.
 
-## Changes to our privacy policy
+## Changes to this privacy policy
 
-We keep our privacy notice under regular review and we will place any updates on this document. This privacy notice was last updated on July 2020.
+I keep this privacy notice under regular review and will place any updates on this document. This privacy notice was last updated in October 2026.
 
-## How to contact us
+## How to contact me
 
-Please contact us if you have any questions about our privacy policy by email to vipin.yadav &lt;at&gt; webtiara.com.
+Please contact me if you have any questions about this privacy policy by email to me &lt;at&gt; vipinyadav.com
